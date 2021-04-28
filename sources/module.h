@@ -114,7 +114,8 @@ public:
     string program_name;
     
     vector<Symbol *> symbols_table;
-    vector<Symbol *> uses_table;
+    vector<Use *> uses_table;
+    vector<Definition *> definitions_table = {};
 
     int data_position;
     int text_position;
@@ -130,12 +131,6 @@ public:
         text_position = t_p;
         program_name = p_n;
     }
-
-    void assign_symbols_table(vector<Symbol *> s_t){
-        symbols_table.assign(s_t.begin(), s_t.end());
-    }
-
-
 };
 
 class Program{

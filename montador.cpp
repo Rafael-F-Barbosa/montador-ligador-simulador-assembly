@@ -36,9 +36,10 @@ int main( int argc, char *argv[ ] )
 
 
         // Obtem a tabela de simbolos do programa
-        vector<Symbol *> symbol_table = first_pass(p); 
+        p->symbols_table = first_pass(p); 
+
         // Passa a tabela de símbolos e o programa como argumentos;
-        vector<string> object_code = second_pass(p, symbol_table);
+        vector<string> object_code = second_pass(p);
 
         // Muda terminação
         string object_name = split_string(argv[1], '.')[0];
@@ -66,14 +67,32 @@ int main( int argc, char *argv[ ] )
         
         for(int i = 1; i < arguments_amount; i++){
 
-            cout << "MODULO:" << argv[i] << endl;
+            cout << "\nMODULO:" << argv[i] << endl;
             
             Module *m = pre_processing(argv[i]);
 
             m->symbols_table = first_pass(m);
 
-            // vector<string> object_code = second_pass(p, symbols_table);
+            // Imprime tabela de símbolos
+            red_cout("TABELA DE SIMBOLOS");
+            for(auto it:m->symbols_table)
+                cout << it->label << ": " << it->position << "-- ext: "<< it->is_extern << endl;
+            
+            vector<string> object_code = second_pass(m);
 
+            // Imprime tabela de símbolos
+            blue_cout("TABELA DE DEFINIÇÕES");
+            for(auto it:m->definitions_table)
+                cout << it->label << ": " << it->value << endl;
+
+            green_cout("TABELA DE USO");
+            for(auto it:m->uses_table)
+                cout << it->label << ": " << it->value << endl;
+
+            // Imprime erros no programa
+            // print_program_errors(m->program_errors);
+
+            cout << endl;
             program->modules.push_back(m);
         }
 

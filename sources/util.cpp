@@ -385,7 +385,10 @@ void red_cout(string s){
 }
 
 void blue_cout(string s){
-    cout << "\033[1;36m"<<s<<"\033[0m\n";
+    cout << "\033[1;34m"<<s<<"\033[0m\n";
+}
+void green_cout(string s){
+    cout << "\033[1;32m"<<s<<"\033[0m\n";
 }
 
 bool is_valid_number(string s){

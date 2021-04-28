@@ -132,12 +132,6 @@ vector<Symbol*> first_pass(Module *module)
             instruction_processing(inst, directive,&symbol_table , &program_counter, it->line_number, it->text, module);
         }
     }
-
-
-    // Imprime tabela de símbolos
-    red_cout("TABELA DE SIMBOLOS");
-    for(auto it:symbol_table)
-        cout << it->label << ": " << it->position << "-- ext: "<< it->is_extern << endl;
-
+    
     return symbol_table;
 }

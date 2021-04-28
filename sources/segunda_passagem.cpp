@@ -117,7 +117,6 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Module *_module){
                 }
             }
         }
-        
     }
 
     // Tratamento de instruções de tamanho 1
@@ -153,7 +152,6 @@ vector<string> *object_code, Module *_module){
         // Erro quantidade de argumentos inválida para diretiva CONST
         if(line_analysed.size() < 2){
             _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: CONST recebe pelo menos 1 argumento."));
-
         }
         // Erro quantidade de argumentos inválida para diretiva CONST
         else if(line_analysed.size() > 2){
@@ -171,10 +169,34 @@ vector<string> *object_code, Module *_module){
             }
         }
     }
+    else if(directive->name == "PUBLIC"){
+        if(line_analysed.size() != 2){
+            _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: PUBLIC aceita 1 argumento."));
+        }else{
+            // Divide argumentos de public por vírgula
+            vector<string> arguments = split_string(line_analysed[1], ',');
+            if(arguments.size() != 1){
+                _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: PUBLIC aceita 1 argumento."));
+            }else{
+                // Obtem o argumento na tabela de símbolos
+                Symbol *argument = get_symbol_by_name(_module->symbols_table, arguments[0]);
+
+                // Se o argumento tiver sido declarado coloca ele na tabela de definições
+                if(argument != NULL){
+                    Definition *def = new Definition(argument->position, argument->label);
+                    _module->definitions_table.push_back(def);
+                }
+                // Senão gera erro
+                else{
+                    _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro semântico: Argumento public não declarado."));
+                }
+            }
+        }
+    }
 
 }
 
-vector<string> second_pass(Module *_module, vector<Symbol*> symbols_table){
+vector<string> second_pass(Module *_module){
   // As tabelas de instrução e de diretivas são padrões
     vector<Instruction *> instruction_table = create_instruction_table();
     vector<Directive *> directive_table = create_directive_table();
@@ -218,7 +240,7 @@ vector<string> second_pass(Module *_module, vector<Symbol*> symbols_table){
                 
                 // Se for instrução
                 if(inst != NULL){
-                    instruction_processing(it, inst, &program_counter, line_analysed, symbols_table, &object_code, _module);
+                    instruction_processing(it, inst, &program_counter, line_analysed, _module->symbols_table, &object_code, _module);
                 }
 
                 // Se for diretiva
@@ -239,7 +261,7 @@ vector<string> second_pass(Module *_module, vector<Symbol*> symbols_table){
 
             // Se for instrução
             if(inst != NULL){
-                instruction_processing(it, inst, &program_counter, line_analysed, symbols_table, &object_code,  _module);
+                instruction_processing(it, inst, &program_counter, line_analysed, _module->symbols_table, &object_code,  _module);
             }
             // Se for diretiva
             else if(directive != NULL){
