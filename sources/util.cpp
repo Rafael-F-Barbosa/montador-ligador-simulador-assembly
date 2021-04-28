@@ -107,8 +107,10 @@ vector<Line*> put_data_section_in_the_end(vector<Line*> program_lines){
             new_program.push_back(l);
         }
     }
+
     for(auto it:program_lines){
-        if(it->line_number >= data_position && it->line_number < text_position){
+        // Alteração do trabalho 1 para identificar linha com Begin
+        if(it->line_number < text_position){
             Line *l = new Line(it->line_number, it->text); 
             new_program.push_back(l);
         }
@@ -299,12 +301,12 @@ Symbol* get_symbol_by_name(vector<Symbol*> v, string name){
 
 vector<Directive*> create_directive_table(){
     vector<Directive*> v = {};
-
     v.push_back(new Directive(1, "SPACE"));
     v.push_back(new Directive(1, "CONST"));
     v.push_back(new Directive(0, "EXTERN"));
     v.push_back(new Directive(0, "PUBLIC"));
-
+    v.push_back(new Directive(0, "BEGIN"));
+    v.push_back(new Directive(0, "END"));
     return v;
 };
 

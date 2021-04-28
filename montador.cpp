@@ -70,6 +70,9 @@ int main( int argc, char *argv[ ] )
             cout << "\nMODULO:" << argv[i] << endl;
             
             Module *m = pre_processing(argv[i]);
+            
+            //  Informação de que esse módulo não é o único.
+            m->is_this_module_the_only = false;
 
             m->symbols_table = first_pass(m);
 
@@ -90,7 +93,7 @@ int main( int argc, char *argv[ ] )
                 cout << it->label << ": " << it->value << endl;
 
             // Imprime erros no programa
-            // print_program_errors(m->program_errors);
+            print_program_errors(m->program_errors);
 
             cout << endl;
             program->modules.push_back(m);

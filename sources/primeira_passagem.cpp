@@ -58,6 +58,18 @@ void instruction_processing(Instruction *inst,Directive *directive, vector<Symbo
             else{
                 (*symbols_table)[last_element_index]->is_extern = true; 
             }
+        }else if(directive->name == "BEGIN"){
+            if(_module->is_this_module_the_only){
+                _module->program_errors.push_back(new ErrorMessage(line_number, text, "Erro XXXXXX: Uso de BEGIN em programa único."));
+            }else{
+                _module->contain_begin = true;
+            }
+        }else if(directive->name == "END"){
+            if(_module->is_this_module_the_only){
+                _module->program_errors.push_back(new ErrorMessage(line_number, text, "Erro XXXXXX: Uso de END em programa único."));
+            }else{
+                _module->contain_end = true;
+            }
         }
     }
     // Senão, gera mensagem de erro: instrução que não existe.
@@ -82,9 +94,9 @@ vector<Symbol*> first_pass(Module *module)
 
         // Pula section data e section text
         if(it->line_number == module->data_position || it->line_number==module->text_position){
+            cout << it->text << "---------------------"<<  it->line_number << endl; 
             continue;
         }
-
 
         if(contain_label(it->text)){
             // Separa o label do resto pro ':'
@@ -133,5 +145,15 @@ vector<Symbol*> first_pass(Module *module)
         }
     }
     
+    if(!module->is_this_module_the_only){
+        if(!module->contain_begin){
+            module->program_errors.push_back(new ErrorMessage(0, "", "Erro XXXXX: Módulo sem BEGIN."));
+        }
+        if(!module->contain_end){
+            module->program_errors.push_back(new ErrorMessage(0, "", "Erro XXXXX: Módulo sem END."));
+        }
+    }
+
+
     return symbol_table;
 }

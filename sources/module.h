@@ -110,12 +110,17 @@ class Module
 {
 public:
     vector<Line *> lines;
-
-    string program_name;
-    
     vector<Symbol *> symbols_table;
     vector<Use *> uses_table;
     vector<Definition *> definitions_table = {};
+
+    // Controle de Begin e End
+    bool is_this_module_the_only = true;
+    bool contain_begin = false;
+    bool contain_end   = false;
+
+
+    string program_name;
 
     int data_position;
     int text_position;
