@@ -76,9 +76,9 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Module *_module){
                 if(second_argument != NULL){
 
                     // Caso seja externa a diretiva é adicionada na tabela de uso
-                    if(first_argument->is_extern){
+                    if(second_argument->is_extern){
                         // Obtém nome e posição do uso do label
-                        Use *new_use = new Use(*program_counter + 1,first_argument->label) ;
+                        Use *new_use = new Use(*program_counter + 1,second_argument->label) ;
                         _module->uses_table.push_back(new_use);
                     }
 
