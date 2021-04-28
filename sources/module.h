@@ -109,32 +109,40 @@ public:
 class Module
 {
 public:
-    vector<Line *> lines;
-    vector<Symbol *> symbols_table;
-    vector<Use *> uses_table;
+    // Linhas do programa
+    vector<Line *> lines = {};
+
+    // Tabelas importantes
+    vector<Symbol *> symbols_table = {};
+    vector<Use *> uses_table = {};
     vector<Definition *> definitions_table = {};
+
+    // Codigo obeto do programa
+    vector<string> object_code = {} ;
 
     // Controle de Begin e End
     bool is_this_module_the_only = true;
     bool contain_begin = false;
     bool contain_end   = false;
 
+    // Atributos para cabeçalho
+    string module_name;
+    int module_len;
 
-    string program_name;
-
+    // Posições de inícios section text e data
     int data_position;
     int text_position;
     
-    int module_len;
-
+    // Vetor de mensagens de erro
     vector< ErrorMessage *> program_errors;
 
+    // Inicialização do módulo
     Module(vector<Line *> v, int d_p, int t_p, string p_n)
     {
         lines.assign(v.begin(), v.end());
         data_position = d_p;
         text_position = t_p;
-        program_name = p_n;
+        module_name = p_n;
     }
 };
 

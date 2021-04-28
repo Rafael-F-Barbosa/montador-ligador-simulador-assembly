@@ -23,17 +23,6 @@ int main( int argc, char *argv[ ] )
         
         // Obtem o programa pré-processado
         Module *p = pre_processing(compiled_program);
-        
-
-        // Salva código pre processado no em um arquivo de texto
-        // ofstream object_result0;
-        // object_result0.open("pre.txt");
-        // for(auto it:p->lines){
-        //     object_result0 << it->text << endl;
-        // }
-        // object_result0.close();
-
-
 
         // Obtem a tabela de simbolos do programa
         p->symbols_table = first_pass(p); 
@@ -81,7 +70,8 @@ int main( int argc, char *argv[ ] )
             for(auto it:m->symbols_table)
                 cout << it->label << ": " << it->position << "-- ext: "<< it->is_extern << endl;
             
-            vector<string> object_code = second_pass(m);
+            m->object_code = second_pass(m);
+            m->module_len = m->object_code.size();
 
             // Imprime tabela de símbolos
             blue_cout("TABELA DE DEFINIÇÕES");
@@ -98,6 +88,42 @@ int main( int argc, char *argv[ ] )
             cout << endl;
             program->modules.push_back(m);
         }
+
+        // Salva código montado
+        ofstream object_file;
+        for(auto it: program->modules){
+            // Abre arquivo de texto
+            object_file.open(it->module_name+".o");
+            
+            // Salva nome e tamanho do arquivo
+            object_file << "N," << it->module_name << endl;
+            object_file << "L," << it->module_len << endl;
+            
+            // Salva mapa de bits - A FAZER
+
+            // Salva tabela de definições
+            for(auto def: it->definitions_table){
+                object_file << "D," << def->value << " "<< def->label << endl;
+            }
+
+            // Salva tabela de uso
+            for(auto use: it->uses_table){
+                object_file << "U," << use->value << " "<< use->label << endl;
+            }
+
+            // Salva arquivo objeto
+            object_file << "T,";
+            for(auto ob_code: it->object_code){
+                object_file << ob_code << " ";
+            }
+            object_file << endl;
+
+            object_file.close();
+        }
+
+        
+
+
 
 
     }

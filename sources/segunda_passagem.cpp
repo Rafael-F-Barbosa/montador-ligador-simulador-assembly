@@ -47,7 +47,7 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Module *_module){
                 Symbol *second_argument = get_symbol_by_name(symbols_table, arguments[1]);
 
                 // Adiciona opcode da instrução
-                object_code->push_back(to_string(inst->opcode));
+                object_code->push_back(to_string(inst->opcode)+"a");
 
                 // Se o argumento for encontrado adiciona o seu valor ao codigo objeto
                 if(first_argument != NULL){
@@ -61,7 +61,7 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Module *_module){
 
 
                     // Adiciona a posição do argumento
-                    object_code->push_back(to_string(first_argument->position));
+                    object_code->push_back(to_string(first_argument->position)+"r");
                     // Atualiza o PC
                     *program_counter +=inst->length;
                 }
@@ -83,7 +83,7 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Module *_module){
                     }
 
                     // Adiciona a posição do argumento
-                    object_code->push_back(to_string(second_argument->position));
+                    object_code->push_back(to_string(second_argument->position)+"r");
                     // Atualiza o PC
                     *program_counter +=inst->length;
                 }
@@ -129,9 +129,9 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Module *_module){
                         }
 
                         // Adiciona opcode da instrução
-                        object_code->push_back(to_string(inst->opcode));
+                        object_code->push_back(to_string(inst->opcode)+"a");
                         // Adiciona a posição do argumento
-                        object_code->push_back(to_string(argument->position));
+                        object_code->push_back(to_string(argument->position)+"r");
                         // Atualiza o PC
                         *program_counter +=inst->length;
 
@@ -150,7 +150,7 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Module *_module){
         if(line_analysed.size() != 1){
             _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: Quantidade de argumentos maior que esperada."));
         }
-        object_code->push_back(to_string(inst->opcode));
+        object_code->push_back(to_string(inst->opcode)+"a");
         *program_counter +=inst->length;
     }
 }
@@ -168,7 +168,7 @@ vector<string> *object_code, Module *_module){
             _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: SPACE não recebe argumentos."));
         }
         else{
-            object_code->push_back("0");
+            object_code->push_back("0a");
             program_counter+=directive->len;
         }
     }
@@ -186,7 +186,7 @@ vector<string> *object_code, Module *_module){
         else{
             // Verifica se o argumento é válido
             if(is_valid_number(line_analysed[1])){
-                object_code->push_back(line_analysed[1]);
+                object_code->push_back(line_analysed[1]+"a");
                 program_counter+=directive->len;
             }
             // Senão gera erro

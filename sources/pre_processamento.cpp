@@ -52,5 +52,5 @@ Module* pre_processing(string program_name)
 
     
     // Retorona novo módulo criado
-    return new Module(sorted_lines, data_position, text_position, program_name);
+    return new Module(sorted_lines, data_position, text_position, split_string(program_name, '.')[0]);
 }

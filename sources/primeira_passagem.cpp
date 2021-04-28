@@ -57,6 +57,7 @@ void instruction_processing(Instruction *inst,Directive *directive, vector<Symbo
             // Senão adiciona flag de símbolo externo
             else{
                 (*symbols_table)[last_element_index]->is_extern = true; 
+                (*symbols_table)[last_element_index]->position = 0; 
             }
         }else if(directive->name == "BEGIN"){
             if(_module->is_this_module_the_only){
@@ -94,7 +95,6 @@ vector<Symbol*> first_pass(Module *module)
 
         // Pula section data e section text
         if(it->line_number == module->data_position || it->line_number==module->text_position){
-            cout << it->text << "---------------------"<<  it->line_number << endl; 
             continue;
         }
 
