@@ -302,6 +302,8 @@ vector<Directive*> create_directive_table(){
 
     v.push_back(new Directive(1, "SPACE"));
     v.push_back(new Directive(1, "CONST"));
+    v.push_back(new Directive(0, "EXTERN"));
+    v.push_back(new Directive(0, "PUBLIC"));
 
     return v;
 };

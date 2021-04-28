@@ -34,13 +34,12 @@ vector<Directive* > directive_table, Module *_module){
 
     // Senão, adciona símbolo a tabela
     else{
-        symbol_table->push_back(new Symbol(program_counter, label));
+        symbol_table->push_back(new Symbol(program_counter, label, false));
     }
 }
 
 // Realiza o processamento de um token do tipo instrução ou diretiva
-void instruction_processing(Instruction *inst,Directive *directive, int *program_counter, int line_number, string text, Module *_module){
-    
+void instruction_processing(Instruction *inst,Directive *directive, vector<Symbol*> *symbols_table, int *program_counter, int line_number, string text, Module *_module){
     // Se for instrução atualiza PC
     if(inst != NULL){
         *program_counter+=inst->length;
@@ -48,6 +47,18 @@ void instruction_processing(Instruction *inst,Directive *directive, int *program
     // Se for diretiva atualiza PC
     else if(directive != NULL){
         *program_counter+=directive->len;
+        if(directive->name == "EXTERN"){
+            // Acessa o último elemento na tabela de símbolos
+            int last_element_index = (*symbols_table).size() - 1;
+            // Se esse index for negativo, a tabela de símbolos está vazia
+            if(last_element_index < 0){
+                red_cout("ERRO: Extern sem label");
+            }
+            // Senão adiciona flag de símbolo externo
+            else{
+                (*symbols_table)[last_element_index]->is_extern = true; 
+            }
+        }
     }
     // Senão, gera mensagem de erro: instrução que não existe.
     else{
@@ -105,7 +116,7 @@ vector<Symbol*> first_pass(Module *module)
                 Directive *directive = get_directive_by_name(directive_table, instructions_elements[0]);
                 
                 // Realiza o processamento da istrução ou diretiva.
-                instruction_processing(inst, directive, &program_counter, it->line_number, it->text, module);
+                instruction_processing(inst, directive, &symbol_table, &program_counter, it->line_number, it->text, module);
             }
         
         // Tem um comando
@@ -118,15 +129,15 @@ vector<Symbol*> first_pass(Module *module)
             Directive *directive = get_directive_by_name(directive_table, line_vector[0]);
 
             // Realiza o processamento da istrução ou diretiva. 
-            instruction_processing(inst, directive, &program_counter, it->line_number, it->text, module);
+            instruction_processing(inst, directive,&symbol_table , &program_counter, it->line_number, it->text, module);
         }
     }
 
 
     // Imprime tabela de símbolos
-    // cout << "TABELA DE SIMBOLOS" << endl;
-    // for(auto it:symbol_table)
-    //     cout << it->label << ": " << it->position << endl;
+    red_cout("TABELA DE SIMBOLOS");
+    for(auto it:symbol_table)
+        cout << it->label << ": " << it->position << "-- ext: "<< it->is_extern << endl;
 
     return symbol_table;
 }

@@ -65,15 +65,17 @@ int main( int argc, char *argv[ ] )
         Program *program = new Program({});
         
         for(int i = 1; i < arguments_amount; i++){
-            cout << argv[i] << endl;
+
+            cout << "MODULO:" << argv[i] << endl;
             
             Module *m = pre_processing(argv[i]);
 
+            m->symbols_table = first_pass(m);
+
+            // vector<string> object_code = second_pass(p, symbols_table);
 
             program->modules.push_back(m);
         }
-
-        cout << program->modules[1]->lines[1]->text << endl;
 
 
     }

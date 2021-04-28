@@ -74,12 +74,13 @@ class Symbol
 public:
     int position;
     string label;
-    bool is_label_extern;
+    bool is_extern;
 
-    Symbol(int p, string l)
+    Symbol(int p, string l, bool is_ext)
     {
         position = p;
         label = l;
+        is_extern = is_ext;
     }
 };
 
@@ -109,6 +110,8 @@ class Module
 {
 public:
     vector<Line *> lines;
+
+    string program_name;
     
     vector<Symbol *> symbols_table;
     vector<Symbol *> uses_table;
@@ -120,12 +123,19 @@ public:
 
     vector< ErrorMessage *> program_errors;
 
-    Module(vector<Line *> v, int d_p, int t_p)
+    Module(vector<Line *> v, int d_p, int t_p, string p_n)
     {
         lines.assign(v.begin(), v.end());
         data_position = d_p;
         text_position = t_p;
+        program_name = p_n;
     }
+
+    void assign_symbols_table(vector<Symbol *> s_t){
+        symbols_table.assign(s_t.begin(), s_t.end());
+    }
+
+
 };
 
 class Program{
