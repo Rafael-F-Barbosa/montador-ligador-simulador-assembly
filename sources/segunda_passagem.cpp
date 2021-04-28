@@ -51,6 +51,15 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Module *_module){
 
                 // Se o argumento for encontrado adiciona o seu valor ao codigo objeto
                 if(first_argument != NULL){
+                    
+                    // Caso seja externa a diretiva é adicionada na tabela de uso
+                    if(first_argument->is_extern){
+                        // Obtém nome e posição do uso do label
+                        Use *new_use = new Use(*program_counter + 1,first_argument->label) ;
+                        _module->uses_table.push_back(new_use);
+                    }
+
+
                     // Adiciona a posição do argumento
                     object_code->push_back(to_string(first_argument->position));
                     // Atualiza o PC
@@ -65,6 +74,14 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Module *_module){
 
                 // Se o argumento for encontrado adiciona o seu valor ao codigo objeto
                 if(second_argument != NULL){
+
+                    // Caso seja externa a diretiva é adicionada na tabela de uso
+                    if(first_argument->is_extern){
+                        // Obtém nome e posição do uso do label
+                        Use *new_use = new Use(*program_counter + 1,first_argument->label) ;
+                        _module->uses_table.push_back(new_use);
+                    }
+
                     // Adiciona a posição do argumento
                     object_code->push_back(to_string(second_argument->position));
                     // Atualiza o PC
@@ -103,12 +120,21 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Module *_module){
                     
                     // Se o argumento for encontrado adiciona o seu valor ao codigo objeto
                     if(argument != NULL){
+
+                        // Caso seja externa a diretiva é adicionada na tabela de uso
+                        if(argument->is_extern){
+                            // Obtém nome e posição do uso do label
+                            Use *new_use = new Use(*program_counter + 1,argument->label) ;
+                            _module->uses_table.push_back(new_use);
+                        }
+
                         // Adiciona opcode da instrução
                         object_code->push_back(to_string(inst->opcode));
                         // Adiciona a posição do argumento
                         object_code->push_back(to_string(argument->position));
                         // Atualiza o PC
                         *program_counter +=inst->length;
+
                     }
                     // Senão gera erro de variável não declarada
                     else{
