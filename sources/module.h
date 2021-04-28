@@ -130,7 +130,12 @@ public:
 
 class Program{
 public:
-    vector<Module *> modules;
+    vector<Module *> modules = {};
+
+    Program(vector<Module *> m){
+        modules.assign(m.begin(), m.end());
+    }
+
 };
 
 #endif

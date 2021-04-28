@@ -50,6 +50,7 @@ Module* pre_processing(string program_name)
     int data_position = find_line_index(sorted_lines, "SECTION DATA");
     int text_position = find_line_index(sorted_lines, "SECTION TEXT");
 
+    
     // Retorona novo módulo criado
     return new Module(sorted_lines, data_position, text_position);
 }

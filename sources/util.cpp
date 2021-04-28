@@ -203,7 +203,6 @@ void print_program(vector<Line*> program)
     for (auto it : program)
     {
         cout << it->line_number << " - " << it->text << " - " << it->text.size() << endl;
-        // cout << it->texto << endl;
     }
 }
 void print_program_errors(vector<ErrorMessage *> program_errors){

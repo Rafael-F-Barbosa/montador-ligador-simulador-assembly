@@ -62,12 +62,18 @@ int main( int argc, char *argv[ ] )
 
         cout << "Tem módulos." << endl;
 
-        Program *program;
+        Program *program = new Program({});
         
         for(int i = 1; i < arguments_amount; i++){
+            cout << argv[i] << endl;
+            
             Module *m = pre_processing(argv[i]);
+
+
             program->modules.push_back(m);
         }
+
+        cout << program->modules[1]->lines[1]->text << endl;
 
 
     }
