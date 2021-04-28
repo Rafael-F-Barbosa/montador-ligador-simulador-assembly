@@ -7,53 +7,21 @@
 #include <string>
 #include <vector>
 
+#include "module.h"
+
 using namespace std;
 
+// Remove os espaços em brancos de uma string
+string remove_white_spaces(string s);
 
-class Line
-{
-public:
-    int line_number;
-    string text;
+// Apaga linhas em branco de um programa
+vector<Line*> clean_program_lines(vector<Line*> program_lines);
 
-    Line(int n, string l)
-    {
-        line_number = n;
-        text = l;
-    }
-};
+// Apaga os comentários de um programa
+string remove_comments(string s);
 
-
-class ErrorMessage{
-public:
-    int line_number;
-    string error_line;
-    string error_message;
-
-    ErrorMessage(int l_n, string e_l, string e_m)
-    {
-        line_number = l_n;
-        error_line = e_l;
-        error_message = e_m;
-    }
-};
-
-
-class Program
-{
-public:
-    vector<Line *> lines;
-    int data_position;
-    int text_position;
-    vector< ErrorMessage *> program_errors;
-
-    Program(vector<Line *> v, int d_p, int t_p)
-    {
-        lines.assign(v.begin(), v.end());
-        data_position = d_p;
-        text_position = t_p;
-    }
-};
+// Coloca data section depois da section text se existir
+vector<Line*> put_data_section_in_the_end(vector<Line*> program_lines);
 
 // Transforma string em maiúscula
 string to_upper_case(string s);
@@ -79,21 +47,7 @@ void print_program_errors(vector<ErrorMessage *> program_errors);
 // Encontra a posiçao de uma linha
 int find_line_index(vector<Line *> program_lines, string searched_text);
 
-// Classe instrucao
-class Instruction
-{
-public:
-    int opcode;
-    int length;
-    string name;
 
-    Instruction(int op, int l, string n)
-    {
-        opcode = op;
-        length = l;
-        name = n;
-    }
-};
 
 vector<Instruction *> create_instruction_table();
 
@@ -109,32 +63,8 @@ bool is_instruction(vector<Instruction *> v, string text);
 // Verfica se uma string é um rótulo
 bool is_label(string text);
 
-// Classe simbolo
-class Symbol
-{
-public:
-    int position;
-    string label;
-    Symbol(int p, string l)
-    {
-        position = p;
-        label = l;
-    }
-};
-
 // Obtém simbolo por nome
 Symbol *get_symbol_by_name(vector<Symbol *> v, string name);
-
-// Classe diretiva
-class Directive{
-public:
-    int len;
-    string name;
-    Directive(int l, string n){
-        len = l;
-        name = n;
-    }
-};
 
 vector<Directive*> create_directive_table();
 

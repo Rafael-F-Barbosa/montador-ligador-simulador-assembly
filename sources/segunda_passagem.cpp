@@ -2,17 +2,18 @@
 using namespace std;
 
 #include "util.h"
+#include "module.h"
 
 // Realiza o processamento das instruções
 void instruction_processing(Line *line, Instruction *inst, int *program_counter, vector<string> line_analysed, 
-vector<Symbol *> symbols_table, vector<string> *object_code, Program *program){
+vector<Symbol *> symbols_table, vector<string> *object_code, Module *_module){
     
     // Tratamento de instruções de tamanho 3
     if(inst->length == 3){
 
         // Quantidade de argumentos inválida(separado por espaços)
         if(line_analysed.size() != 2){
-            program->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: Quantidade de argumentos incorreta."));
+            _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: Quantidade de argumentos incorreta."));
         }
         // Senão: a quantidade é certa(separado por espaços)
         else{
@@ -21,9 +22,9 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Program *program){
 
             // Valida caso seja menor ou maior
             if(arguments.size() < 2){
-                program->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: Quantidade de argumentos menor que esperada."));
+                _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: Quantidade de argumentos menor que esperada."));
             }else if(arguments.size() > 2){
-                program->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: Quantidade de argumentos maior que esperada."));
+                _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: Quantidade de argumentos maior que esperada."));
             }
 
             // Senão a quantidade de argumentos é correta
@@ -32,11 +33,11 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Program *program){
                 bool second_argument_contain_lexical_errors = false;
 
                 if(validate_label(arguments[0]).size()>1){
-                    program->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro Léxico: No primeiro argumento. "+ validate_label(arguments[0])));
+                    _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro Léxico: No primeiro argumento. "+ validate_label(arguments[0])));
                     first_argument_contain_lexical_errors = true;
                 }
                 if(validate_label(arguments[1]).size()>1){
-                    program->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro Léxico: No segunda argumento. "+ validate_label(arguments[1])));
+                    _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro Léxico: No segunda argumento. "+ validate_label(arguments[1])));
                     second_argument_contain_lexical_errors = true;
                 }       
 
@@ -58,7 +59,7 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Program *program){
                 // Senão gera erro de variável não declarada
                 else{
                     if(!first_argument_contain_lexical_errors){
-                        program->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro semântico: Primeiro argumento não declarado."));
+                        _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro semântico: Primeiro argumento não declarado."));
                     }
                 }
 
@@ -72,7 +73,7 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Program *program){
                 // Senão gera erro de variável não declarada
                 else{
                     if(!second_argument_contain_lexical_errors){
-                        program->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro semântico: Segundo argumento não declarado."));
+                        _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro semântico: Segundo argumento não declarado."));
                     }
                 }
                 
@@ -83,18 +84,18 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Program *program){
     // Tratamento de instruções de tamanho 2
     else if(inst -> length == 2){
         if(line_analysed.size() != 2){
-            program->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: Quantidade de argumentos incorreta."));
+            _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: Quantidade de argumentos incorreta."));
         }
         else{
             vector<string> arguments = split_string(line_analysed[1], ',');
             if(arguments.size() > 1){
-                program->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: Quantidade de argumentos maior que esperada."));
+                _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: Quantidade de argumentos maior que esperada."));
             }else if(arguments.size() < 1){
-                program->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: Quantidade de argumentos menor que esperada."));
+                _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: Quantidade de argumentos menor que esperada."));
             }
             else{
                 if(validate_label(arguments[0]).size()>1){
-                    program->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro Léxico: "+ validate_label(arguments[0])));
+                    _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro Léxico: "+ validate_label(arguments[0])));
                 }else{
 
                     // Obtem o argumento na tabela de símbolos
@@ -111,7 +112,7 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Program *program){
                     }
                     // Senão gera erro de variável não declarada
                     else{
-                        program->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro semântico: Argumento não declarado."));
+                        _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro semântico: Argumento não declarado."));
                     }
                 }
             }
@@ -122,7 +123,7 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Program *program){
     // Tratamento de instruções de tamanho 1
     else if(inst -> length == 1){
         if(line_analysed.size() != 1){
-            program->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: Quantidade de argumentos maior que esperada."));
+            _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: Quantidade de argumentos maior que esperada."));
         }
         object_code->push_back(to_string(inst->opcode));
         *program_counter +=inst->length;
@@ -130,7 +131,7 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Program *program){
 }
 
 void directive_processing(Line* line, Directive *directive, int *program_counter, vector<string> line_analysed, 
-vector<string> *object_code, Program *program){
+vector<string> *object_code, Module *_module){
     // Tratar casos como mais de um argumento pros dois
     // Tratar const de formato inválido
 
@@ -139,7 +140,7 @@ vector<string> *object_code, Program *program){
         
         if(line_analysed.size() != 1){
             // Erro quantidade de argumentos inválida para diretiva CONST
-            program->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: SPACE não recebe argumentos."));
+            _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: SPACE não recebe argumentos."));
         }
         else{
             object_code->push_back("0");
@@ -151,12 +152,12 @@ vector<string> *object_code, Program *program){
     else if(directive ->name == "CONST"){
         // Erro quantidade de argumentos inválida para diretiva CONST
         if(line_analysed.size() < 2){
-            program->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: CONST recebe pelo menos 1 argumento."));
+            _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: CONST recebe pelo menos 1 argumento."));
 
         }
         // Erro quantidade de argumentos inválida para diretiva CONST
         else if(line_analysed.size() > 2){
-            program->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: CONST no máximo 1 argumento."));
+            _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: CONST no máximo 1 argumento."));
         }
         else{
             // Verifica se o argumento é válido
@@ -166,14 +167,14 @@ vector<string> *object_code, Program *program){
             }
             // Senão gera erro
             else{
-                program->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: CONST só aceita inteiros."));
+                _module->program_errors.push_back(new ErrorMessage(line->line_number, line->text, "Erro sintático: CONST só aceita inteiros."));
             }
         }
     }
 
 }
 
-vector<string> second_pass(Program *program, vector<Symbol*> symbols_table){
+vector<string> second_pass(Module *_module, vector<Symbol*> symbols_table){
   // As tabelas de instrução e de diretivas são padrões
     vector<Instruction *> instruction_table = create_instruction_table();
     vector<Directive *> directive_table = create_directive_table();
@@ -184,10 +185,10 @@ vector<string> second_pass(Program *program, vector<Symbol*> symbols_table){
 
     int program_counter = 0;
 
-    for(auto it: program->lines){
+    for(auto it: _module->lines){
 
         // Pula section data e section text
-        if(it->line_number == program->data_position || it->line_number==program->text_position){
+        if(it->line_number == _module->data_position || it->line_number==_module->text_position){
             continue;
         }
 
@@ -217,12 +218,12 @@ vector<string> second_pass(Program *program, vector<Symbol*> symbols_table){
                 
                 // Se for instrução
                 if(inst != NULL){
-                    instruction_processing(it, inst, &program_counter, line_analysed, symbols_table, &object_code, program);
+                    instruction_processing(it, inst, &program_counter, line_analysed, symbols_table, &object_code, _module);
                 }
 
                 // Se for diretiva
                 else if(directive != NULL){
-                    directive_processing(it, directive, &program_counter, line_analysed, &object_code, program);
+                    directive_processing(it, directive, &program_counter, line_analysed, &object_code, _module);
                 }
 
                 // Caso não seja nem diretiva nem instrução foi tratada na primeira passagem
@@ -238,11 +239,11 @@ vector<string> second_pass(Program *program, vector<Symbol*> symbols_table){
 
             // Se for instrução
             if(inst != NULL){
-                instruction_processing(it, inst, &program_counter, line_analysed, symbols_table, &object_code,  program);
+                instruction_processing(it, inst, &program_counter, line_analysed, symbols_table, &object_code,  _module);
             }
             // Se for diretiva
             else if(directive != NULL){
-                directive_processing(it, directive, &program_counter, line_analysed, &object_code, program);
+                directive_processing(it, directive, &program_counter, line_analysed, &object_code, _module);
             }
 
                 // Caso não seja nem diretiva nem instrução foi tratada na primeira passagem

@@ -2,7 +2,8 @@
 #define SEGUNDA_PASSAGEM
 
 #include "util.h"
+#include "module.h"
 
-vector<string> second_pass(Program *program, vector<Symbol*> symbols_table);
+vector<string> second_pass(Module *program, vector<Symbol*> symbols_table);
 
 #endif

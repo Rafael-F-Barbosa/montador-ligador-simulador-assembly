@@ -5,41 +5,41 @@
 #include <vector>
 
 #include "util.h"
+#include "module.h"
 
 using namespace std;
 
 
 // Realiza o processamento de um token do tipo label
 void label_processing(string label, int program_counter, int line_number, string text, vector<Symbol*> *symbol_table, vector<Instruction*> instruction_table,
-vector<Directive* > directive_table, Program *program){
+vector<Directive* > directive_table, Module *_module){
     
     // Elimina espaço no final do label, se houver
     label = split_string(label, ' ')[0];
 
     // Se o label for redefinido, adiciona um erro
     if(get_symbol_by_name(*symbol_table, label)){
-        program->program_errors.push_back(new ErrorMessage(line_number, text, "Erro semântico: símbolo redefinido."));
+        _module->program_errors.push_back(new ErrorMessage(line_number, text, "Erro semântico: símbolo redefinido."));
     }
 
     // Se o label for inválido, adiciona um erro
     else if(validate_label(label).size()>1){
-        program->program_errors.push_back(new ErrorMessage(line_number, text, "Erro Léxico: "+ validate_label(label)));
+        _module->program_errors.push_back(new ErrorMessage(line_number, text, "Erro Léxico: "+ validate_label(label)));
     }
 
     // Se o label for uma palavra reservada, adiciona um erro
     else if(is_reserved_word(instruction_table, directive_table, label)){
-        program->program_errors.push_back(new ErrorMessage(line_number, text, "Erro sintático: Palavra reservada."));
+        _module->program_errors.push_back(new ErrorMessage(line_number, text, "Erro sintático: Palavra reservada."));
     }
 
     // Senão, adciona símbolo a tabela
     else{
         symbol_table->push_back(new Symbol(program_counter, label));
     }
-
 }
 
 // Realiza o processamento de um token do tipo instrução ou diretiva
-void instruction_processing(Instruction *inst,Directive *directive, int *program_counter, int line_number, string text, Program *program){
+void instruction_processing(Instruction *inst,Directive *directive, int *program_counter, int line_number, string text, Module *_module){
     
     // Se for instrução atualiza PC
     if(inst != NULL){
@@ -51,11 +51,11 @@ void instruction_processing(Instruction *inst,Directive *directive, int *program
     }
     // Senão, gera mensagem de erro: instrução que não existe.
     else{
-        program->program_errors.push_back(new ErrorMessage(line_number, text, "Erro sintático: Essa instrução ou diretiva não existe."));
+        _module->program_errors.push_back(new ErrorMessage(line_number, text, "Erro sintático: Essa instrução ou diretiva não existe."));
     }
 }
 
-vector<Symbol*> first_pass(Program *program)
+vector<Symbol*> first_pass(Module *module)
 {
     // As tabelas de instrução e de diretivas são padrões
     vector<Instruction *> instruction_table = create_instruction_table();
@@ -67,10 +67,10 @@ vector<Symbol*> first_pass(Program *program)
     // Inicializa o contador de programa
     int program_counter = 0;
 
-    for(auto it: program->lines){
+    for(auto it: module->lines){
 
         // Pula section data e section text
-        if(it->line_number == program->data_position || it->line_number==program->text_position){
+        if(it->line_number == module->data_position || it->line_number==module->text_position){
             continue;
         }
 
@@ -85,7 +85,7 @@ vector<Symbol*> first_pass(Program *program)
             // Só tem símbolo!!
             if(line_vector.size() == 1){
                 // Processa label
-                label_processing(label, program_counter, it->line_number, it->text, &symbol_table, instruction_table, directive_table, program);
+                label_processing(label, program_counter, it->line_number, it->text, &symbol_table, instruction_table, directive_table, module);
 
             // Tem símbolo e um comando
             }else{
@@ -93,7 +93,7 @@ vector<Symbol*> first_pass(Program *program)
                 string instruction = line_vector[1];
                 
                 // Processa label
-                label_processing(label, program_counter, it->line_number, it->text, &symbol_table, instruction_table, directive_table, program);
+                label_processing(label, program_counter, it->line_number, it->text, &symbol_table, instruction_table, directive_table, module);
 
                 // Processa instrução
 
@@ -105,7 +105,7 @@ vector<Symbol*> first_pass(Program *program)
                 Directive *directive = get_directive_by_name(directive_table, instructions_elements[0]);
                 
                 // Realiza o processamento da istrução ou diretiva.
-                instruction_processing(inst, directive, &program_counter, it->line_number, it->text, program);
+                instruction_processing(inst, directive, &program_counter, it->line_number, it->text, module);
             }
         
         // Tem um comando
@@ -118,7 +118,7 @@ vector<Symbol*> first_pass(Program *program)
             Directive *directive = get_directive_by_name(directive_table, line_vector[0]);
 
             // Realiza o processamento da istrução ou diretiva. 
-            instruction_processing(inst, directive, &program_counter, it->line_number, it->text, program);
+            instruction_processing(inst, directive, &program_counter, it->line_number, it->text, module);
         }
     }
 

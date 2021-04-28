@@ -5,6 +5,7 @@
 #include "./sources/pre_processamento.h"
 #include "./sources/primeira_passagem.h"
 #include "./sources/segunda_passagem.h"
+#include "./sources/module.h"
 
 using namespace std;
 
@@ -21,7 +22,7 @@ int main( int argc, char *argv[ ] )
         string compiled_program = argv[1];
         
         // Obtem o programa pré-processado
-        Program *p = pre_processing(compiled_program);
+        Module *p = pre_processing(compiled_program);
         
 
         // Salva código pre processado no em um arquivo de texto
@@ -55,9 +56,20 @@ int main( int argc, char *argv[ ] )
                 object_result << it << " ";
             }
             object_result.close();
+        } 
+    }
+    else if(arguments_amount == 3 || arguments_amount == 4){
+
+        cout << "Tem módulos." << endl;
+
+        Program *program;
+        
+        for(int i = 1; i < arguments_amount; i++){
+            Module *m = pre_processing(argv[i]);
+            program->modules.push_back(m);
         }
-        
-        
+
+
     }
     else{
         cout << "Foram passados mais argumentos que o necessário." << endl;

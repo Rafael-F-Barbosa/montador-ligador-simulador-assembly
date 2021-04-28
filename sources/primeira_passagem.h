@@ -3,9 +3,11 @@
 
 #include <map>
 #include "util.h"
+#include "module.h"
+
 
 using namespace std;
 
-vector<Symbol*> first_pass(Program *programa);
+vector<Symbol*> first_pass(Module *programa);
 
 #endif

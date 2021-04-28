@@ -3,9 +3,10 @@
 
 #include <map>
 #include "util.h"
+#include "module.h"
 
 using namespace std;
 
-Program* pre_processing(string nome_programa_rodado);
+Module* pre_processing(string program_name);
 
 #endif
