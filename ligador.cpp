@@ -226,13 +226,10 @@ int main( int argc, char *argv[ ] )
         // Salvando código em arquivo
         ofstream output_file;
         output_file.open(split_string(p->modules[0]->module_name, '.')[0]+".obj");
-        for(auto mod:p->modules){
-
+        for(auto code:final_object_code){
+            output_file << code << " ";
         }
-            for(auto code:final_object_code){
-                output_file << code << " ";
-            }
-        
+        output_file.close();
 
 
         

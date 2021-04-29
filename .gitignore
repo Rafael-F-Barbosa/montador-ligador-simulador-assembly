@@ -3,3 +3,6 @@
 *.obj
 *.out
 arquivos_testes/
+montador
+ligador
+simulador
