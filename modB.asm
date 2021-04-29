@@ -5,6 +5,7 @@ VAL: EXTERN
 L1: EXTERN
 PUBLIC Y
 PUBLIC MOD_B
+PUBLIC X ; Caso eu não tivesse declarado x, ele não acusou erro - arrumar isso
 OUTPUT Y
 OUTPUT VAL
 OUTPUT X

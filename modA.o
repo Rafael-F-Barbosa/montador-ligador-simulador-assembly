@@ -1,9 +1,10 @@
 N,modA
 L,12
-D,11 VAL
-D,10 L1
-U,1 Y
-U,5 Y
-U,7 X
-U,9 MOD_B
-T,12a 0r 10a 11r 1a 0r 11a 0r 7a 0r 14a 5a 
+R,0 1 0 1 0 1 0 1 0 1 0 0 
+D,VAL 11
+D,L1 10
+U,Y 1
+U,Y 5
+U,X 7
+U,MOD_B 9
+T,12 0 10 11 1 0 11 0 7 0 14 5 

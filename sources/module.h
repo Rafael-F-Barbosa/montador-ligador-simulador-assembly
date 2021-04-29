@@ -3,11 +3,9 @@
 
 #include <iostream>
 #include <fstream>
-#include <map>
 #include <string>
 #include <vector>
 
-#include "util.h"
 
 using namespace std;
 
@@ -116,6 +114,7 @@ public:
     vector<Symbol *> symbols_table = {};
     vector<Use *> uses_table = {};
     vector<Definition *> definitions_table = {};
+    vector<int> bits_map = {};
 
     // Codigo obeto do programa
     vector<string> object_code = {} ;
@@ -137,23 +136,34 @@ public:
     vector< ErrorMessage *> program_errors;
 
     // Inicialização do módulo
-    Module(vector<Line *> v, int d_p, int t_p, string p_n)
+    Module(vector<Line *> v, int d_p, int t_p, string m_n)
     {
         lines.assign(v.begin(), v.end());
         data_position = d_p;
         text_position = t_p;
-        module_name = p_n;
+        module_name = m_n;
     }
 };
 
 class Program{
 public:
     vector<Module *> modules = {};
+    vector<int> correction_factor = {0};
+    vector<Definition *> global_definitions_table = {};
 
     Program(vector<Module *> m){
         modules.assign(m.begin(), m.end());
     }
+    Definition* get_definition_by_name(string name){
+        int tam_v = global_definitions_table.size();
+        for(int i=0; i<tam_v; i++){
+            if(global_definitions_table[i]->label == name){
+                return global_definitions_table[i];
+            }
+        }
+        return NULL;
 
+    }
 };
 
 #endif
