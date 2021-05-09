@@ -79,19 +79,19 @@ int main( int argc, char *argv[ ] )
             // Salva o módulo no programa
             program->modules.push_back(m);
 
-            // // Imprime tabela de símbolos
-            // red_cout("TABELA DE SIMBOLOS");
-            // for(auto it:m->symbols_table)
-            //     cout << it->label << ": " << it->position << "-- ext: "<< it->is_extern << endl;
+            // Imprime tabela de símbolos
+            red_cout("TABELA DE SIMBOLOS");
+            for(auto it:m->symbols_table)
+                cout << it->label << ": " << it->position << "-- ext: "<< it->is_extern << endl;
 
-            // // Imprime tabela de símbolos
-            // blue_cout("TABELA DE DEFINIÇÕES");
-            // for(auto it:m->definitions_table)
-            //     cout << it->label << ": " << it->value << endl;
+            // Imprime tabela de símbolos
+            blue_cout("TABELA DE DEFINIÇÕES");
+            for(auto it:m->definitions_table)
+                cout << it->label << ": " << it->value << endl;
 
-            // green_cout("TABELA DE USO");
-            // for(auto it:m->uses_table)
-            //     cout << it->label << ": " << it->value << endl;
+            green_cout("TABELA DE USO");
+            for(auto it:m->uses_table)
+                cout << it->label << ": " << it->value << endl;
         }
 
     }
