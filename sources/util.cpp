@@ -17,8 +17,17 @@ string remove_white_spaces(string s)
     vector<char> cleaned_vector = {};
     int v_size = v.size();
 
+    // Remove carriage return -> windows
+    if(v[v_size-1] == 13){
+        v[v_size-1] = ' ';
+    }
+
     for (int x = 0; x < v_size; x++)
     {
+        // Remove '\t' - Problema encontrado no trabalho 1 
+        if(v[x] == '\t'){
+            v[x] = ' ';
+        }
         if (x != v_size - 1)
         {
             if (!(v[x] == ' ' && v[x] == v[x + 1]))
