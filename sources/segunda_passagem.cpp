@@ -63,7 +63,7 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Module *_module){
                     // Adiciona a posição do argumento
                     object_code->push_back(to_string(first_argument->position)+"r");
                     // Atualiza o PC
-                    *program_counter +=inst->length;
+                    // *program_counter +=inst->length; -> Só atualiza o PC no segundo argumento
                 }
                 // Senão gera erro de variável não declarada
                 else{
@@ -78,14 +78,14 @@ vector<Symbol *> symbols_table, vector<string> *object_code, Module *_module){
                     // Caso seja externa a diretiva é adicionada na tabela de uso
                     if(second_argument->is_extern){
                         // Obtém nome e posição do uso do label
-                        Use *new_use = new Use(*program_counter + 1,second_argument->label) ;
+                        Use *new_use = new Use(*program_counter + 2,second_argument->label) ;
                         _module->uses_table.push_back(new_use);
                     }
 
                     // Adiciona a posição do argumento
                     object_code->push_back(to_string(second_argument->position)+"r");
                     // Atualiza o PC
-                    *program_counter +=inst->length;
+                    *program_counter +=inst->length; // -> Só atualiza o PC no segundo argumento
                 }
                 // Senão gera erro de variável não declarada
                 else{
