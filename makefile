@@ -17,7 +17,7 @@ montador.o: montador.cpp
 simulador.o: simulador.cpp
 		@ g++ -c simulador.cpp -std=c++11
 
-lgiador.o: ligador.cpp
+ligador.o: ligador.cpp
 		@ g++ -c ligador.cpp -std=c++11
 
 # Auxiliares

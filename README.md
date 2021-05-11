@@ -1,14 +1,14 @@
 # Montador assembly
 
-Esse trabalho é um montador e um simulador de código assembly inventado realizado para a disciplina de Software Básico-UnB no segundo semestre de 2020.
+Esse trabalho é um montador e um ligador de código assembly inventado realizado para a disciplina de Software Básico-UnB no segundo semestre de 2020.
 
 ## Ambiente de Desenvolvimento
-O código foi desenvolvido em c++ e compilado com g++ versão 9.3.0 em um Ubuntu 20.04, mas deve ser possível utilizá-lo com qualquer compilador quer suporte o padrão c++11.
+O código foi desenvolvido em c++ e compilado com g++ gcc versão 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04) em um Linux Mint 19.3 Tricia, mas deve ser possível utilizá-lo com qualquer compilador quer suporte o padrão c++11. O código foi testado no linux bem como os exemplos desenolvidos para este também, no entanto, foram desenvolvidas estratégias para evitar problemas com códigos desenvolvidos no windows.
 
 
 ## Compilação
 
-O código pode ser compilado utilizando o makefile disponível no diretório principal da aplicação. Assim basta digitar make que o simulador e o montador serão compilados. 
+O código pode ser compilado utilizando o makefile disponível no diretório principal da aplicação. Assim basta digitar make que o ligador e o montador serão compilados e ligados. 
 ```
 make
 ```
@@ -25,13 +25,13 @@ Em seguida a compilação e ligação é feita com:
 g++ -std=c++11 montador.cpp  pre_processamento.o primeira_passagem.o segunda_passagem.o util.o -o montador
 ```
 
-E o **simulador** com os comandos:
+E o **ligador** com os comandos:
 ```
-g++ -std=c++11 -c ./sources/fonte_simulador.cpp ./sources/util.cpp
+g++ -std=c++11 -c ./sources/module.cpp ./sources/util.cpp
 ```
 Em seguida a compilação e ligação é feita com:
 ```
-g++ -std=c++11 simulador.cpp  fonte_simulador.o util.o -o simulador
+g++ -std=c++11 ligador.cpp  module.o util.o -o ligador
 ```
 
 ## Execução
