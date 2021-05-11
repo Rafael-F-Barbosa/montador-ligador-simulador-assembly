@@ -141,7 +141,9 @@ vector<Line*> put_data_section_in_the_end(vector<Line*> program_lines){
     }
 
     // Adiciona linha do end
-    new_program.push_back(final_line);
+    if(final_line != NULL){
+        new_program.push_back(final_line);
+    }
 
     return new_program;
 }
