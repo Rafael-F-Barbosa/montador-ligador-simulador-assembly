@@ -18,8 +18,11 @@ string remove_white_spaces(string s)
     int v_size = v.size();
 
     // Remove carriage return -> windows
-    if(v[v_size-1] == 13){
-        v[v_size-1] = ' ';
+    if(v.size() != 0){
+        if(v[v_size-1] == '\r'){
+            v.pop_back();
+            v_size = v.size();
+        }
     }
 
     for (int x = 0; x < v_size; x++)
@@ -57,7 +60,7 @@ string remove_white_spaces(string s)
 
 vector<Line*> clean_program_lines(vector<Line*> program_lines)
 {
-
+    
     // Limpa epaços em branco
     vector<Line*> removed_white_spaces_vector;
 
@@ -66,8 +69,7 @@ vector<Line*> clean_program_lines(vector<Line*> program_lines)
         Line *l = new Line(it->line_number, remove_white_spaces(it->text));
         removed_white_spaces_vector.push_back(l);
     }
-
-    vector<Line*> removed_empty_lines_vector;
+    vector<Line*> removed_empty_lines_vector = {};
 
     for (auto it : removed_white_spaces_vector)
     {
@@ -95,9 +97,10 @@ string remove_comments(string s){
 }
 
 vector<Line*> put_data_section_in_the_end(vector<Line*> program_lines){
-
     int data_position = find_line_index(program_lines, "SECTION DATA");
     int text_position = find_line_index(program_lines, "SECTION TEXT");
+    int end_position = find_line_index(program_lines, "END");
+
     
     // Se a data está no final, já é o formato que eu desejo.
     if(data_position > text_position){
@@ -106,24 +109,39 @@ vector<Line*> put_data_section_in_the_end(vector<Line*> program_lines){
 
 
     vector<Line*> new_program = {};
+    Line *final_line = NULL;
+    
+    // Copia textos antes da section data
+    for(auto it: program_lines){
+        if(it->line_number == data_position){
+            break;
+        }
+        new_program.push_back(new Line(it->line_number, it->text));
+    }
 
+
+    // Coloca seção de texto no arquivo
     for(auto it:program_lines){
         if(it->line_number < text_position){
             continue;
         }
-        else {
+        else if(it->line_number != end_position){
+            Line *l = new Line(it->line_number, it->text); 
+            new_program.push_back(l);
+        }else if(it->line_number == end_position){
+            final_line = new Line(it->line_number, it->text); 
+        }
+    }
+    // Coloca seção de dados no final
+    for(auto it:program_lines){
+        if(it->line_number >= data_position && it->line_number < text_position){
             Line *l = new Line(it->line_number, it->text); 
             new_program.push_back(l);
         }
     }
 
-    for(auto it:program_lines){
-        // Alteração do trabalho 1 para identificar linha com Begin
-        if(it->line_number < text_position){
-            Line *l = new Line(it->line_number, it->text); 
-            new_program.push_back(l);
-        }
-    }
+    // Adiciona linha do end
+    new_program.push_back(final_line);
 
     return new_program;
 }

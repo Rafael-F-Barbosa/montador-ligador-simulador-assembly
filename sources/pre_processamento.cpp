@@ -39,7 +39,7 @@ Module* pre_processing(string program_name)
     {
         cout << "Não foi possível abrir o arquivo" << endl;
     }
-
+    
     // Retira espaços desnecessários entre as linhas
     vector<Line*> cleaned_lines = clean_program_lines(program_lines);
 
