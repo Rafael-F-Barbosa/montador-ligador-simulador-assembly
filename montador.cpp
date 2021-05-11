@@ -104,7 +104,10 @@ int main( int argc, char *argv[ ] )
     ofstream object_file;
     for(auto it: program->modules){
         // Imprime erros no programa
-        print_program_errors(it->program_errors);
+        if(it->program_errors.size() != 0){
+            cout << "Erro(s) no módulo: " << it->module_name << endl;
+            print_program_errors(it->program_errors);
+        }
 
         // Abre arquivo de texto
         object_file.open(it->module_name+".o");
