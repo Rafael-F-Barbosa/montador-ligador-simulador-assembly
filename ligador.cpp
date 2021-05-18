@@ -1,3 +1,10 @@
+/*   *       @file: ligador.asm
+     *     @author: Rafael Fernandes Barbosa 170163857
+     * @disciplina: Software Básico
+     *  @Professor: Bruno Luiggi Macchiavello   
+     *@description: Ligador assembly inventado
+*/
+
 #include <iostream>
 #include <map>
 

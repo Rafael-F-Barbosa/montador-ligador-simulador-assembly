@@ -1,3 +1,9 @@
+/*   *       @file: montador.asm
+     *     @author: Rafael Fernandes Barbosa 170163857
+     * @disciplina: Software Básico
+     *  @Professor: Bruno Luiggi Macchiavello   
+     *@description: Montador assembly inventado
+*/
 #include <iostream>
 #include <map>
 

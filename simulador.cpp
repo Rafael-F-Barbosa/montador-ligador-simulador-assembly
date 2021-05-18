@@ -1,3 +1,10 @@
+/*   *       @file: simulador.asm
+     *     @author: Rafael Fernandes Barbosa 170163857
+     * @disciplina: Software Básico
+     *  @Professor: Bruno Luiggi Macchiavello   
+     *@description: Simulador assembly inventado
+*/
+
 #include <iostream>
 
 #include "./sources/util.h"
