@@ -39,8 +39,11 @@ Para executar o montador é necessário passar um programa de texto com a lingua
 ```
 ./montador exemplo.asm
 ```
-
-Para executar o simulador é necessário passar um programa texto com um código objeto gerado pelo montador. Exemplo:
+Para executar o ligador é necessário passar um arquivo de texto com o código objeto gerado pelo montador. Exemplo:
+```
+./montador moduloA.o moduloB.o
+```
+Para executar o simulador é necessário passar um programa texto com um código objeto gerado pelo ligador. Exemplo:
 ```
 ./simulador exemplo.obj
 ```
