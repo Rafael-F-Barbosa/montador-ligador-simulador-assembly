@@ -10,6 +10,7 @@
 using namespace std;
 
 
+// Definição tipo linha
 class Line
 {
 public:
@@ -23,7 +24,7 @@ public:
     }
 };
 
-
+// Definição tipo mensagem de erro
 class ErrorMessage{
 public:
     int line_number;
@@ -38,7 +39,7 @@ public:
     }
 };
 
-// Classe instrucao
+// Definição tipo Instrução
 class Instruction
 {
 public:
@@ -54,7 +55,7 @@ public:
     }
 };
 
-// Classe diretiva
+// Definição tipo diretiva
 class Directive{
 public:
     int len;
@@ -66,7 +67,7 @@ public:
 };
 
 
-// Classe simbolo
+// Definição tipo símbolo
 class Symbol
 {
 public:
@@ -82,7 +83,7 @@ public:
     }
 };
 
-
+// Definição tipo Definição
 class Definition{
 public:
     int value;
@@ -94,6 +95,7 @@ public:
     }
 };
 
+// Definição Uso
 class Use{
 public:
     int value;
@@ -104,6 +106,8 @@ public:
     }
 };
 
+
+// Definição tipo módulo
 class Module
 {
 public:
@@ -145,6 +149,7 @@ public:
     }
 };
 
+// Definição tipo Programa
 class Program{
 public:
     vector<Module *> modules = {};

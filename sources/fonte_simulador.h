@@ -11,6 +11,7 @@ using namespace std;
 
 void format_cout_instruction(int program_counter, int acc, bool is_output=false, int output=0);
 
+// Classe que realiza toda a simulação
 class ProgramSimulation{
 public:
     int PC = 0;

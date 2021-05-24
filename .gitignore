@@ -1,5 +1,4 @@
 *.o
-*.asm
 *.obj
 *.out
 arquivos_testes/

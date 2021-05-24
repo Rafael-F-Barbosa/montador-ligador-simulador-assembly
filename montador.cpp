@@ -1,5 +1,5 @@
-/*   *       @file: montador.asm
-     *     @author: Rafael Fernandes Barbosa 170163857
+/*   *       @file: montador.cpp
+     *     @author: Rafael Fernandes Barbosa - 170163857
      * @disciplina: Software Básico
      *  @Professor: Bruno Luiggi Macchiavello   
      *@description: Montador assembly inventado
@@ -24,6 +24,7 @@ int main( int argc, char *argv[ ] )
 
     if(arguments_amount == 1){
         cout << "É necessário passar o nome do arquivo a ser montado." << endl;
+        return 0;
     }else if(arguments_amount == 2){
         // Extrai o nome do módulo
         string compiled_program = argv[1];
@@ -40,6 +41,7 @@ int main( int argc, char *argv[ ] )
         // Salva tamanho do módulo
         _module->module_len = _module->object_code.size();
 
+        // Cria mapa de bits
         for(int i = 0; i < _module->object_code.size(); i++){
             int last_index = _module->object_code[i].size()- 1;
             if(_module->object_code[i][last_index] == 'a'){
@@ -58,19 +60,20 @@ int main( int argc, char *argv[ ] )
     else if(arguments_amount == 3 || arguments_amount == 4){
         for(int i = 1; i < arguments_amount; i++){
 
-            cout << "\nMODULO:" << argv[i] << endl;
+            cout << "\nMódulo: " << argv[i] << endl;
             
+            // Realiza o pré-processamento
             Module *m = pre_processing(argv[i]);
             
             //  Informação de que esse módulo não é o único.
             m->is_this_module_the_only = false;
 
+            // Realiza passagens
             m->symbols_table = first_pass(m);            
-            
             m->object_code = second_pass(m);
-
             m->module_len = m->object_code.size();
 
+            // Cria mapa de bits
             for(int i = 0; i < m->object_code.size(); i++){
                 int last_index = m->object_code[i].size()- 1;
                 if(m->object_code[i][last_index] == 'a'){
@@ -94,7 +97,7 @@ int main( int argc, char *argv[ ] )
             blue_cout("TABELA DE DEFINIÇÕES");
             for(auto it:m->definitions_table)
                 cout << it->label << ": " << it->value << endl;
-
+            // Imprime tabela de uso
             green_cout("TABELA DE USO");
             for(auto it:m->uses_table)
                 cout << it->label << ": " << it->value << endl;
@@ -103,10 +106,11 @@ int main( int argc, char *argv[ ] )
     }
     else{
         cout << "Foram passados mais argumentos que o necessário." << endl;
+        return 0;
     }
 
 
-    // Imprime erros e salva código montado
+    // Imprime erros e salva código montado em arquivo
     ofstream object_file;
     for(auto it: program->modules){
         // Imprime erros no programa
@@ -122,8 +126,7 @@ int main( int argc, char *argv[ ] )
         object_file << "N," << it->module_name << endl;
         object_file << "L," << it->module_len << endl;
         
-        // Salva mapa de bits - A FAZER
-        // Salva tabela de definições
+        // Salva mapa de bits
         object_file << "R,";
         for(auto bit: it->bits_map){
             object_file << bit << " ";
@@ -146,11 +149,8 @@ int main( int argc, char *argv[ ] )
             object_file << ob_code << " ";
         }
         object_file << endl;
-
         object_file.close();
     }
-
-
 
     return 0;
 }

@@ -79,6 +79,7 @@ void instruction_processing(Instruction *inst,Directive *directive, vector<Symbo
     }
 }
 
+// Realiza primeira passagem
 vector<Symbol*> first_pass(Module *module)
 {
     // As tabelas de instrução e de diretivas são padrões
@@ -153,7 +154,6 @@ vector<Symbol*> first_pass(Module *module)
             module->program_errors.push_back(new ErrorMessage(0, "", "Erro XXXXX: Módulo sem END."));
         }
     }
-
 
     return symbol_table;
 }

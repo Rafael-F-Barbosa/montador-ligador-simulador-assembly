@@ -9,6 +9,7 @@
 
 using namespace std;
 
+// Realiza o pré-processamento
 Module* pre_processing(string program_name)
 {
     // Cria um objeto que lê arquivos.

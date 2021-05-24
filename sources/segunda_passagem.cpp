@@ -222,6 +222,7 @@ vector<string> *object_code, Module *_module){
 
 }
 
+// Realiza segunda passagem
 vector<string> second_pass(Module *_module){
   // As tabelas de instrução e de diretivas são padrões
     vector<Instruction *> instruction_table = create_instruction_table();

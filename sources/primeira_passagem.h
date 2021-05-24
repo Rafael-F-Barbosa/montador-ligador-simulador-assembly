@@ -8,6 +8,7 @@
 
 using namespace std;
 
+// Definição primeira passagem
 vector<Symbol*> first_pass(Module *programa);
 
 #endif

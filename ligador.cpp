@@ -1,4 +1,4 @@
-/*   *       @file: ligador.asm
+/*   *       @file: ligador.cpp
      *     @author: Rafael Fernandes Barbosa 170163857
      * @disciplina: Software Básico
      *  @Professor: Bruno Luiggi Macchiavello   
@@ -20,6 +20,7 @@ int main( int argc, char *argv[ ] )
 
     if(arguments_amount == 1){
         cout << "É necessário passar o nome do arquivo a ser ligado." << endl;
+        return 0;
     }
     // Caso apenas um programa precise ser ligado
     else if(arguments_amount == 2){
@@ -52,8 +53,10 @@ int main( int argc, char *argv[ ] )
             output_file.close();
         }
         else
-        {
+        {   
+            // Se não for possível abrir arquivo, finaliza programa.
             cout << "Não foi possível abrir o arquivo" << endl;
+            return 0;
         }
 
         
@@ -66,7 +69,7 @@ int main( int argc, char *argv[ ] )
             // Extrai o nome do módulo
             string file_name = argv[i];
 
-            cout << "parsing module: " << file_name << endl; 
+            cout << endl << "Ligando módulo: " << file_name << endl; 
 
             // Cria um objeto que lê arquivos.
             ifstream input_file;
@@ -85,13 +88,11 @@ int main( int argc, char *argv[ ] )
                     // Obtém nome do módulo
                     if(line[0] == 'N'){
                         m->module_name = split_string(line,',')[1];
-                        cout << m->module_name << endl << endl;
                     }
                     
                     // Obtém tamanho do módulo
                     if(line[0] == 'L'){
                         m->module_len = stoi(split_string(line,',')[1]);
-                        cout << m->module_len << endl;
                     }
                     // Obtém mapa de bits do módulo
                     else if(line[0] == 'R'){
@@ -121,32 +122,34 @@ int main( int argc, char *argv[ ] )
                     }
 
                 }
+                // Fecha arquivo
+                input_file.close();
 
+                // Adiciona módulo ao programa
                 p->modules.push_back(m);
 
+                // Imprime tabelas extraídas do código objeto
                 blue_cout("TABELA DE DEFINIÇÕES");
                 for(auto it:m->definitions_table)
                     cout << it->label << ": " << it->value << endl;
-
                 green_cout("TABELA DE USO");
                 for(auto it:m->uses_table)
                     cout << it->label << ": " << it->value << endl;
-                
                 red_cout("CÓDIGO OBJETO");
                 for(auto it:m->object_code)
                     cout << it << " ";
                 cout << endl;
-
                 cout << "MAPA DE BITS" << endl;
                 for(auto it:m->bits_map)
                     cout << it << " ";
                 cout << endl;
 
-                input_file.close();
             }
             else
             {
+                // Se não for possível abrir arquivo, finaliza programa.
                 cout << "Não foi possível abrir o arquivo" << endl;
+                return 0;
             }
         }
 
@@ -156,6 +159,10 @@ int main( int argc, char *argv[ ] )
             int f_c = p->correction_factor[p->correction_factor.size()-1] + p->modules[i]->module_len;
             p->correction_factor.push_back(f_c);
         }
+
+        // Impressões
+        cout << endl;
+        red_cout("LIGAÇÃO: ");
         cout << "Fatores de correção : " << endl;
         cout << p->correction_factor[0] << " " << p->correction_factor[1] << endl;
 
@@ -168,11 +175,14 @@ int main( int argc, char *argv[ ] )
             }
             i++;
         }
-        blue_cout("TABELA DE DEFINIÇÕES GLOBAL");
+
+        // Imprime tabela global de definições
+        blue_cout("Tabela de Definições Global");
         for(auto it:p->global_definitions_table){
             cout << it->label << " " << it->value << endl;
         }
-
+        
+        // Imprime endereços antes da correção
         red_cout("Endereços antes");
         for(auto module:p->modules){
             for(auto obj: module->object_code){
@@ -190,6 +200,8 @@ int main( int argc, char *argv[ ] )
                 }
             }
         } 
+
+        // Imprime endereços corrigidos(endereços relativos)
         red_cout("Endereços depois");
         for(auto module:p->modules){
             for(auto obj: module->object_code){
@@ -212,8 +224,8 @@ int main( int argc, char *argv[ ] )
             print_program_errors(p->modules[i]->program_errors);
         }
 
+        // Imprime endereços finais
         green_cout("Endereços Finais");
-
         for(auto module:p->modules){
             for(auto obj: module->object_code){
                 cout << obj << " ";
@@ -221,15 +233,14 @@ int main( int argc, char *argv[ ] )
             cout << endl;
         }
 
-        vector<string> final_object_code = {};
+
         // Alinhando os códigos
+        vector<string> final_object_code = {};
         for(int i = 0; i < p->modules.size(); i++){
             for(auto code:p->modules[i]->object_code){
                 final_object_code.push_back(code);
             }
         }
-
-
         // Salvando código em arquivo
         ofstream output_file;
         output_file.open(split_string(p->modules[0]->module_name, '.')[0]+".obj");
@@ -238,13 +249,11 @@ int main( int argc, char *argv[ ] )
         }
         output_file.close();
 
-
-        
-
-
     }
     else{
+        // Se forem passados mais arquivos que o suportado(3), finaliza programa.
         cout << "Foram passados mais argumentos que o necessário." << endl;
+        return 0;
     }
 
     return 0;

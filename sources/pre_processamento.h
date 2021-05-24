@@ -7,6 +7,7 @@
 
 using namespace std;
 
+// Definição pre_processamento
 Module* pre_processing(string program_name);
 
 #endif

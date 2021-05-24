@@ -8,6 +8,9 @@
 
 using namespace std;
 
+// Implementação de funções que são úteis a diferentes módulos
+
+// Apaga espaços em branco de strings
 string remove_white_spaces(string s)
 {
     // Coloca a string em um vetor;
@@ -58,6 +61,7 @@ string remove_white_spaces(string s)
     return transform_vector_in_string(cleaned_vector);
 }
 
+// Apaga linhas em branco de um programa
 vector<Line*> clean_program_lines(vector<Line*> program_lines)
 {
     
@@ -83,6 +87,7 @@ vector<Line*> clean_program_lines(vector<Line*> program_lines)
     return removed_empty_lines_vector;
 }
 
+// Apaga comentários
 string remove_comments(string s){
     // Quando o ; está no início o split não funcionava
     if(s[0] == ';'){
@@ -96,6 +101,7 @@ string remove_comments(string s){
     return splitted_string[0];
 }
 
+// Coloca seção data no final
 vector<Line*> put_data_section_in_the_end(vector<Line*> program_lines){
     int data_position = find_line_index(program_lines, "SECTION DATA");
     int text_position = find_line_index(program_lines, "SECTION TEXT");
@@ -148,6 +154,7 @@ vector<Line*> put_data_section_in_the_end(vector<Line*> program_lines){
     return new_program;
 }
 
+// Transforma string em uppercase
 string to_upper_case(string s){
     int tam_s = s.size();
     string upper_case = "";
@@ -158,6 +165,7 @@ string to_upper_case(string s){
     return upper_case;
 }
 
+// Transforma string em vetor
 vector<char> transform_string_in_vector(string s)
 {
     vector<char> v = {};
@@ -169,7 +177,7 @@ vector<char> transform_string_in_vector(string s)
     return v;
 }
 
-
+// Transforma vetor em string
 string transform_vector_in_string(vector<char> v)
 {
     string s;
@@ -181,7 +189,7 @@ string transform_vector_in_string(vector<char> v)
     return s;
 }
 
-
+// Separa string por um char separador  retornando vetor de strings
 vector<string> split_string(string s, char separador){
     vector<string> splitted_string;
 
@@ -205,6 +213,7 @@ vector<string> split_string(string s, char separador){
     return splitted_string;
 }
 
+// Separa string por um seprador retornando vetor de inteiros
 vector<int> split_string_integer(string s, char separador){
 
     vector<int> splitted_string;
@@ -229,6 +238,7 @@ vector<int> split_string_integer(string s, char separador){
     return splitted_string;
 }
 
+// Imprime programa
 void print_program(vector<Line*> program)
 {
     for (auto it : program)
@@ -236,6 +246,8 @@ void print_program(vector<Line*> program)
         cout << it->line_number << " - " << it->text << " - " << it->text.size() << endl;
     }
 }
+
+// Imprime os erros
 void print_program_errors(vector<ErrorMessage *> program_errors){
     for (auto it : program_errors)
     {
@@ -244,6 +256,7 @@ void print_program_errors(vector<ErrorMessage *> program_errors){
     }
 }
 
+// Encontra index de uma linha procurada
 int find_line_index(vector<Line*> program_lines, string searched_text){
     for(auto it:program_lines){
         if(it->text == searched_text){
@@ -257,9 +270,7 @@ int find_line_index(vector<Line*> program_lines, string searched_text){
 // Retorna uma tabela com as instruções
 vector<Instruction *> create_instruction_table()
 {
-
     vector<Instruction *> instructions_table;
-
     instructions_table.push_back(new Instruction(1, 2, "ADD"));
     instructions_table.push_back(new Instruction(2, 2, "SUB"));
     instructions_table.push_back(new Instruction(3, 2, "MUL"));
@@ -278,6 +289,7 @@ vector<Instruction *> create_instruction_table()
     return instructions_table;
 }
 
+// Obtém instrução por opcode
 Instruction *get_instruction_by_opcode(vector<Instruction *> v, int op)
 {
     int tam_v = v.size();
@@ -290,6 +302,7 @@ Instruction *get_instruction_by_opcode(vector<Instruction *> v, int op)
     return NULL;
 }
 
+// Obtem instrução por nome
 Instruction *get_instruction_by_name(vector<Instruction *> v, string name)
 {
     int tam_v = v.size();
@@ -301,6 +314,7 @@ Instruction *get_instruction_by_name(vector<Instruction *> v, string name)
     return NULL;
 }
 
+// Verifica se string é instrução
 bool is_instruction(vector<Instruction *> v, string text)
 {
     Instruction *inst = get_instruction_by_name(v, text);
@@ -310,6 +324,7 @@ bool is_instruction(vector<Instruction *> v, string text)
     return true;
 }
 
+// Verifica se string é um label
 bool is_label(string text){
     int tam_t = text.size();
     if(text[tam_t-1] == ':'){
@@ -318,6 +333,7 @@ bool is_label(string text){
     return false;
 }
 
+// Obtem símbolo por nome
 Symbol* get_symbol_by_name(vector<Symbol*> v, string name){
     int tam_v = v.size();
     for(int i=0; i<tam_v; i++){
@@ -328,6 +344,7 @@ Symbol* get_symbol_by_name(vector<Symbol*> v, string name){
     return NULL;
 }
 
+// Cria tabela de diretivas
 vector<Directive*> create_directive_table(){
     vector<Directive*> v = {};
     v.push_back(new Directive(1, "SPACE"));
@@ -339,6 +356,7 @@ vector<Directive*> create_directive_table(){
     return v;
 };
 
+// Obtém diretiva por nome
 Directive* get_directive_by_name(vector<Directive*> v, string name){
     int tam_v = v.size();
     for(int i=0; i<tam_v; i++){
@@ -349,6 +367,7 @@ Directive* get_directive_by_name(vector<Directive*> v, string name){
     return NULL;
 }
 
+// Verifica se string é diretiva
 bool is_directive(vector<Directive*> v, string s){
     Directive *directive = get_directive_by_name(v, s);
     if(directive == NULL){
@@ -357,6 +376,7 @@ bool is_directive(vector<Directive*> v, string s){
     return true;
 }
 
+// Verifica se char é letra
 bool is_letter(char c){
     c = toupper(c);
     if(int(c) >= int('A') && int(c) <= int('Z')){
@@ -364,6 +384,8 @@ bool is_letter(char c){
     }
     return 0;
 }
+
+// Verifica se char é número
 bool is_number(char c){
     if(int(c) >= int('0') && int(c) <= '9'){
         return 1;
@@ -371,6 +393,7 @@ bool is_number(char c){
     return 0;
 }
 
+// Verifica se label é válido
 bool contain_only_letter_number_or_underscore(string s){
     for (auto it:s){
         if(!is_letter(it) && !is_number(it) && !(it=='_')){
@@ -380,6 +403,7 @@ bool contain_only_letter_number_or_underscore(string s){
     return 1;
 }
 
+// Valida label
 string validate_label(string s){
     if(s.size() > 50){
         return "Label com tamanho inválido.";
@@ -393,6 +417,7 @@ string validate_label(string s){
     return "";
 }
 
+// Verifica se label é palavra reservada
 bool is_reserved_word(vector<Instruction *> instructions, vector<Directive *> directives, string s){
     if(is_instruction(instructions, s)){
         return true;
@@ -403,7 +428,7 @@ bool is_reserved_word(vector<Instruction *> instructions, vector<Directive *> di
     return false;
 }
 
-
+// Verifica se string contém label
 bool contain_label(string line){
     if(line.find(':') == -1){
         return false;
@@ -411,17 +436,20 @@ bool contain_label(string line){
     return true;
 }
 
+// Imprime vermelho
 void red_cout(string s){
     cout << "\033[1;31m"<<s<<"\033[0m\n";
 }
-
+// Imprime azul
 void blue_cout(string s){
     cout << "\033[1;34m"<<s<<"\033[0m\n";
 }
+// Imprime verde
 void green_cout(string s){
     cout << "\033[1;32m"<<s<<"\033[0m\n";
 }
 
+// Verifica se número é válido
 bool is_valid_number(string s){
     int s_zize = s.size();
     

@@ -12,6 +12,7 @@
 
 using namespace std;
 
+// Definição dos opcodes de cada instrução
 #define ADD 1
 #define SUB 2
 #define MUL 3
@@ -34,6 +35,7 @@ int main( int argc, char *argv[ ] )
 
     if(qtd_argumentos == 1){
         cout << "É necessário passar o nome do arquivo a ser montado." << endl;
+        return 0;
     }else if(qtd_argumentos == 2){
 
         string assembler_name = argv[0];
@@ -62,6 +64,7 @@ int main( int argc, char *argv[ ] )
         else
         {
             cout << "Não foi possível abrir o arquivo" << endl;
+            return 0;
         }
 
         // Validação da formatação do arquivo objeto.
@@ -138,10 +141,8 @@ int main( int argc, char *argv[ ] )
     }
     else{
         cout << "Foram passados mais argumentos que o necessário." << endl;
+        return 0;
     }
-
-    // Salva os outputs em um arquivo
-
 
     return 0;
 }
